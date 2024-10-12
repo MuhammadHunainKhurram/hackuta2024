@@ -9,18 +9,30 @@
     "lint": "next lint"
   },
   "dependencies": {
+<<<<<<< Updated upstream
+=======
+    "mongodb": "^6.9.0",
+>>>>>>> Stashed changes
     "next": "14.2.15",
     "react": "^18",
     "react-dom": "^18"
   },
   "devDependencies": {
+<<<<<<< Updated upstream
     "@types/node": "20.16.11",
+=======
+    "@types/node": "^20",
+>>>>>>> Stashed changes
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "eslint": "^8",
     "eslint-config-next": "14.2.15",
     "postcss": "^8",
     "tailwindcss": "^3.4.1",
+<<<<<<< Updated upstream
     "typescript": "5.6.3"
+=======
+    "typescript": "^5"
+>>>>>>> Stashed changes
   }
 }
