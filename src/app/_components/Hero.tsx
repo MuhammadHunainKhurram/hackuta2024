@@ -1,32 +1,45 @@
 import React from "react";
+import { Poppins } from 'next/font/google';
+import Head from "next/head";
+import Link from "next/link";
+
+const poppins = Poppins({
+  subsets: ['latin'],
+  weight: ['400', '700'], // Specify weights you need
+  variable: '--font-poppins',
+});
 
 function Hero() {
-    return(
-        <section className="bg-gray-50">
-  <div className="mx-auto max-w-screen-xl px-4 py-32 lg:flex lg:h-screen lg:items-center">
-    <div className="mx-auto max-w-xl text-center">
-      <h1 className="text-3xl font-extrabold sm:text-5xl">
-        OnlyPlans
-        <strong className="font-extrabold text-purple-600 sm:block"> Something in Purple IDK</strong>
-      </h1>
+  return (
+    <>
+      <div className="flex flex-col justify-center items-center h-screen bg-gradient-to-r from-gradient-start via-gradient-middle to-gradient-end bg-[length:300%_300%] animate-gradient text-white">
+        <h1 className="text-6xl mb-6 tracking-wide text-center">
+          <span className={`${poppins.className} font-extrabold text-gray-300`}>project</span>
+          <span className={`${poppins.className} font-light text-gray-300`}>Name</span>
+        </h1>
+        <p className="container mx-auto mt-3 space-x-6 items-center justify-between text-lg text-center text-gray-200 mb-8 max-w-lg">
+          <Link href="/(auth)/sign-up">
+            <button className="bg-blue-600 text-white px-4 py-2 rounded-2xl hover:bg-blue-700 transition-colors">
+              Register
+            </button>
+          </Link>
+          <Link href="/(auth)/sign-in">
+            <button className="bg-blue-600 text-white px-4 py-2 rounded-2xl hover:bg-blue-700 transition-colors">
+              Sign In
+            </button>
+          </Link>
+        </p>
 
-      <p className="mt-4 sm:text-xl/relaxed">
-        Something Here
-      </p>
-
-      <div className="mt-8 flex flex-wrap justify-center gap-4">
-        <a
-          className="block w-full rounded bg-purple-600 px-12 py-3 text-sm font-medium text-white shadow hover:bg-red-700 focus:outline-none focus:ring active:bg-red-500 sm:w-auto"
-          href="#"
-        >
-          Get Started
-        </a>
-
+        <p className="mt-5 text-sm text-gray-300 text-center">
+          Learn more, with less.
+        </p>
+        <div className="absolute bottom-4 left-0 right-0 text-center text-xs text-gray-400">
+          © 2024 CHANGE ME. All rights reserved.
+        </div>
       </div>
-    </div>
-  </div>
-</section>
-    )
+    </>
+  );
 }
+
 
 export default Hero
