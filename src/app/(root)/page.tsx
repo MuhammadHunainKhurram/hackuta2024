@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Header from "./components/Header";
+import Header from "../../components/Header";
 
 export default function Home() {
   const links = [
@@ -15,7 +15,7 @@ export default function Home() {
         <Image
           className="dark:invert"
           src="https://nextjs.org/icons/next.svg"
-          alt="Next.js logo"
+          alt="XYZ"
           width={180}
           height={38}
           priority
