@@ -1,9 +1,17 @@
-import React from 'react'
+'use client';
 
-function Dashboard() {
+import { useUser, RedirectToSignIn, UserButton } from "@clerk/nextjs";
+
+export default function DashboardPage() {
+  const { isSignedIn, user } = useUser();
+
+  if (!isSignedIn) {
+    return <RedirectToSignIn />;
+  }
+
   return (
-    <div>Dashboard</div>
-  )
+    <div>
+      <UserButton/>
+    </div>
+  );
 }
-
-export default Dashboard
