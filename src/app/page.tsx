@@ -1,12 +1,17 @@
-import Image from "next/image";
 import Header from "./_components/Header";
 import Hero from "./_components/Hero";
 
 export default function Home() {
-  
+  const links = [
+    { label: 'Get Started', href: '/get-started', isButton: true, position: 'left' as 'left' },
+    { label: 'Login', href: '/login', position: 'right' as 'right' },
+    { label: 'Contact', href: '/contact', position: 'right' as 'right' },
+  ];
+
+
   return (
     <div>
-      <Header/>
+      <Header links={links}/>
       <Hero />
     </div>
   );
