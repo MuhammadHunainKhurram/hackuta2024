@@ -1,17 +1,26 @@
 'use client';
 
-import { useUser, RedirectToSignIn, UserButton } from "@clerk/nextjs";
+import React from "react";
+import AddCourses from "@/components/AddCourses";
+import DisplayCourseList from "@/components/DisplayCourseList";
+import { useRouter } from "next/navigation";
 
-export default function DashboardPage() {
-  const { isSignedIn } = useUser();
+const Dashboard: React.FC = () => {
+  const router = useRouter();
 
-  if (!isSignedIn) {
-    return <RedirectToSignIn />;
-  }
+  const handleAddCourse = () => {
+    router.push("/create-course");
+  };
 
   return (
-    <div>
-      <UserButton/>
+    <div className="p-8">
+      <h1 className="text-2xl font-bold mb-4">Dashboard</h1>
+      <div className="flex justify-end mb-6">
+        <AddCourses onAddCourse={handleAddCourse} />
+      </div>
+      <DisplayCourseList />
     </div>
   );
-}
+};
+
+export default Dashboard;

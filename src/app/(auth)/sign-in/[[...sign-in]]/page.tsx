@@ -15,9 +15,8 @@ export default function Page() {
   const router = useRouter();
 
   useEffect(() => {
-    // If the user is signed in, redirect to the dashboard
     if (isSignedIn) {
-      router.push('/dashboard'); // Replace '/dashboard' with your actual dashboard route
+      router.push('/dashboard'); 
     }
   }, [isSignedIn, router]);
 
