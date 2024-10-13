@@ -1,12 +1,13 @@
 import { NextApiRequest, NextApiResponse } from "next";
+import { MongoClient, ObjectId } from "mongodb";
 import OpenAI from "openai";
-
-// Log the environment variable to ensure it's being loaded correctly
-console.log("OPENAI_API_KEY from env:", process.env.OPENAI_API_KEY);
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY!,
 });
+
+const uri = process.env.MONGODB_URI!;
+const client = new MongoClient(uri);
 
 export default async function handler(
   req: NextApiRequest,
@@ -16,34 +17,76 @@ export default async function handler(
     return res.status(405).json({ error: "Only POST requests are allowed" });
   }
 
-  const { description, chapters } = req.body;
+  const { description, chapters, userId, includeVideo, includeQuiz } = req.body;
 
   try {
-    const response = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
-      messages: [
-        {
-          role: "system",
-          content:
-            "You are an assistant that generates course guides in JSON format.",
-        },
-        {
-          role: "user",
-          content: `Generate a course guide in JSON format based on the number of chapters and course description provided by the user. Include: Chapter Number, Chapter Name, and Summary of Chapter Content.\n\nCourse Description: ${description}\nNumber of Chapters: ${chapters}`,
-        },
-      ],
-      temperature: 0.7,
-      max_tokens: 400,
+    const courseContent = [];
+    
+    // Generate content for each chapter individually
+    for (let i = 1; i <= chapters; i++) {
+      const response = await openai.chat.completions.create({
+        model: "gpt-3.5-turbo",
+        messages: [
+          {
+            role: "system",
+            content:
+              "You are an assistant generating educational content for courses.",
+          },
+          {
+            role: "user",
+            content: `Generate a course guide in JSON format with the following details:
+            - Course Description: ${description}
+            - Number of Chapters: ${chapters}
+            - Include Video: ${includeVideo}
+            - Include Quiz: ${includeQuiz}
+            - User ID: ${userId}
+  
+            For each chapter, include:
+            - Chapter Number
+            - Chapter Name
+            - A Summary of Chapter Content.
+            - An Empty JSON String Called Content, that will be filled later`,          },
+        ],
+        temperature: 0.7,
+        max_tokens: 400,
+      });
+
+      const message = response.choices?.[0]?.message?.content?.trim();
+      if (!message) throw new Error("Failed to generate content.");
+
+      courseContent.push({
+        chapterNumber: i,
+        chapterName: `Chapter ${i}`,
+        content: message,
+      });
+    }
+
+    // Prepare course data to be saved
+    const courseData = {
+      userId,
+      description,
+      includeVideo,
+      includeQuiz,
+      chapters: courseContent,
+      createdAt: new Date(),
+    };
+
+    // Save to MongoDB
+    await client.connect();
+    const database = client.db("HackUTA2024");
+    const coursesCollection = database.collection("generated_courses");
+
+    const result = await coursesCollection.insertOne(courseData);
+    await client.close();
+
+    console.log("Course saved:", result.insertedId);
+
+    res.status(200).json({
+      message: "Course generated and saved successfully.",
+      courseId: result.insertedId,
     });
-
-    const message = response.choices?.[0]?.message?.content?.trim();
-    if (!message) throw new Error("No content received from OpenAI.");
-
-    console.log("Generated Course Guide:", message); // Log JSON
-
-    res.status(200).json({ courseGuide: JSON.parse(message) });
   } catch (error) {
-    console.error("Error with OpenAI API:", error);
-    res.status(500).json({ error: "Failed to generate course guide" });
+    console.error("Error generating course guide:", error);
+    res.status(500).json({ error: "Failed to generate course guide." });
   }
 }

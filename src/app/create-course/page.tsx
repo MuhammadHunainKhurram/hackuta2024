@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from "react";
+import { useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 
 const CreateCourse: React.FC = () => {
@@ -9,17 +10,25 @@ const CreateCourse: React.FC = () => {
   const [includeVideo, setIncludeVideo] = useState(false);
   const [includeQuiz, setIncludeQuiz] = useState(false);
   const router = useRouter();
+  const { user } = useUser();
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
 
+    if (!user) {
+      alert("User not logged in!");
+      return;
+    }
+
     const courseData = {
+      userId: user.id,
       description,
-      chapters: chapters || 0,
+      chapters: chapters || 1,
+      includeVideo,
+      includeQuiz,
     };
 
-    console.log("Submitting course:", courseData); // Log course data before sending
-    console.log("API Key:", process.env.OPENAI_API_KEY); // Log API Key
+    console.log("Submitting course:", courseData);
 
     try {
       const response = await fetch("/api/GenerateCourseGuide", {
@@ -31,18 +40,13 @@ const CreateCourse: React.FC = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to generate course guide");
+        throw new Error("Failed to generate course guide.");
       }
 
       const data = await response.json();
+      console.log("Course created successfully:", data);
 
-      console.log("Entire JSON Course Guide:", data); // Log entire JSON
-
-      // Log just the course guide part of the JSON
-      console.log("Received Course Guide JSON:", data.courseGuide); // Log JSON to console
-
-      // Redirect back to the dashboard after logging the guide
-      router.push("/dashboard");
+      router.push(`/course/${data.courseId}`);
     } catch (error) {
       console.error("Error generating course guide:", error);
       alert("There was an error generating the course guide. Please try again.");

@@ -16,7 +16,9 @@ const DisplayCourseList: React.FC = () => {
   useEffect(() => {
     const fetchCourses = async () => {
       try {
-        const response = await fetch("/api/getCourses");
+        const response = await fetch("/api/getCourses", {
+          method: "GET",
+        });
 
         if (!response.ok) {
           throw new Error(`Failed to fetch courses: ${response.statusText}`);
@@ -35,8 +37,8 @@ const DisplayCourseList: React.FC = () => {
     fetchCourses();
   }, []);
 
-  if (loading) return <p>Loading courses...</p>;
-  if (error) return <p>Error: {error}</p>;
+  if (loading) return <p>Loading courses...</p>; // Show loading state
+  if (error) return <p>Error: {error}</p>; // Show error if any
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-4">
