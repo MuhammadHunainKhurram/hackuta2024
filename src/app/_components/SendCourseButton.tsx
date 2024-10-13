@@ -1,12 +1,10 @@
-'use client';
-
+"use client";
 import { useState } from 'react';
-import { CourseData } from '@/lib/mongo/sendGeneratedCourse';
 
 export default function SendCourseButton() {
   const [loading, setLoading] = useState(false);
 
-  const exampleCourseData: CourseData = {
+  const exampleCourseData = {
     title: "Introduction to TypeScript",
     description: "A beginner-friendly course that introduces TypeScript and its core features.",
     duration: 10,
