@@ -30,22 +30,34 @@ export default async function handler(
           {
             role: "system",
             content:
-              "You are an assistant generating educational content for courses.",
+              "You are an assistant generating educational content for courses. We will provide you with a course description ",
           },
           {
             role: "user",
-            content: `Generate a course guide in JSON format with the following details:
-            - Course Description: ${description}
-            - Number of Chapters: ${chapters}
-            - Include Video: ${includeVideo}
-            - Include Quiz: ${includeQuiz}
-            - User ID: ${userId}
-  
-            For each chapter, include:
-            - Chapter Number
-            - Chapter Name 
-            - A Summary of Chapter Content.
-            - An Empty JSON String Called Content, that will be filled later`,          },
+            content: `Generate a course guide in JSON format following these details:
+            - User ID as (userId): ${userId}
+            - Course Description as (description): ${description}
+            - Include Video as (includeVideo): ${includeVideo}
+            - Chapters as (chapters): (this is a nested object, each chapter has number, title, and content. In this course, there are ${chapters} chapters.)
+              - number as (chapterNumber): (you fill this in based on the current chapter number, this is also nested.)
+              -   title as (chapterName): (you fill this in based on what you think the current chapter title should be)
+              -   content as (content): (this is an empty JSON string. you do not need to input anything in this field.)
+              
+              example: userId = "user_2nNA9j0s0tptwKumnDZYExEFWrg", description = "Introduction to Python", includeVideo = false, chapters = 1
+                            {
+                "userId": "user_2nNA9j0s0tptwKumnDZYExEFWrg",
+                "description": "Introduction to Python",
+                "includeVideo": false,
+                "chapters": [
+                  {
+                    "chapterNumber": 1,
+                    "chapterName": "Chapter 1",
+                    "content": { (THIS IS ALWAYS EMPTY!!! DO NOT WRITE ANYTHING IN CONTENT!)                   
+                    }
+                  }
+                ]
+              }
+              `,          },
         ],
         temperature: 0.7,
         max_tokens: 400,
