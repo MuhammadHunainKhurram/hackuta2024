@@ -72,7 +72,6 @@ export default async function handler(
       });
     }
 
-    // Prepare course data to be saved
     const courseData = {
       userId,
       description,
@@ -82,7 +81,6 @@ export default async function handler(
       createdAt: new Date(),
     };
 
-    // Save to MongoDB
     await client.connect();
     const database = client.db("HackUTA2024");
     const coursesCollection = database.collection("generated_courses");
