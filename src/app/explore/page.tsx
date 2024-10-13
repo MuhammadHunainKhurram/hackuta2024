@@ -8,7 +8,8 @@ async function fetchGeneratedCourses() {
 }
 
 export default async function Home() {
-  const generated_courses = await fetchGeneratedCourses()
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const generated_courses: any[] = await fetchGeneratedCourses()
 
   return (
     <div>

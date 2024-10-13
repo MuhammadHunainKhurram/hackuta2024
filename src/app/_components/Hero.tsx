@@ -1,29 +1,42 @@
-import React from "react";
+"use client";
+import React, { useEffect } from "react";
 import { Poppins } from 'next/font/google';
-import Head from "next/head";
 import Link from "next/link";
+import { useUser} from '@clerk/nextjs'
+import { useRouter } from 'next/navigation';
 
 const poppins = Poppins({
   subsets: ['latin'],
-  weight: ['400', '700'], // Specify weights you need
+  weight: ['400', '700'],
   variable: '--font-poppins',
 });
 
+
+
 function Hero() {
+  const { isSignedIn } = useUser();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (isSignedIn) {
+      router.push('/dashboard'); // Redirect to /dashboard if signed in
+    }
+  }, [isSignedIn, router]);
+
   return (
     <>
       <div className="flex flex-col justify-center items-center h-screen bg-gradient-to-r from-gradient-start via-gradient-middle to-gradient-end bg-[length:300%_300%] animate-gradient text-white">
         <h1 className="text-6xl mb-6 tracking-wide text-center">
-          <span className={`${poppins.className} font-extrabold text-gray-300`}>project</span>
-          <span className={`${poppins.className} font-light text-gray-300`}>Name</span>
+          <span className={`${poppins.className} font-extrabold text-gray-300`}>edu</span>
+          <span className={`${poppins.className} font-light text-gray-300`}>Genie</span>
         </h1>
         <p className="container mx-auto mt-3 space-x-6 items-center justify-between text-lg text-center text-gray-200 mb-8 max-w-lg">
-          <Link href="/(auth)/sign-up">
+          <Link href="/sign-up">
             <button className="bg-blue-600 text-white px-4 py-2 rounded-2xl hover:bg-blue-700 transition-colors">
               Register
             </button>
           </Link>
-          <Link href="/(auth)/sign-in">
+          <Link href="/sign-in">
             <button className="bg-blue-600 text-white px-4 py-2 rounded-2xl hover:bg-blue-700 transition-colors">
               Sign In
             </button>
@@ -34,7 +47,7 @@ function Hero() {
           Learn more, with less.
         </p>
         <div className="absolute bottom-4 left-0 right-0 text-center text-xs text-gray-400">
-          © 2024 CHANGE ME. All rights reserved.
+          © 2024 eduGenie. All rights reserved.
         </div>
       </div>
     </>

@@ -15,7 +15,7 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "CHANGE ME",
+  title: "eduGenie",
   description: "HackUTA 2024 Project",
 };
 

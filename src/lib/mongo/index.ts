@@ -7,19 +7,19 @@ if (!URI) {
   throw new Error('Please add your Mongo URI to .env.local');
 }
 
-let client: MongoClient = new MongoClient(URI, options);
+const client: MongoClient = new MongoClient(URI, options);
 let clientPromise: Promise<MongoClient>;
 console.log(client)
-declare global {
-  var _mongoClientPromise: Promise<MongoClient> | undefined;
+
+const globalM = global as typeof globalThis & {
+  _mongoClientPromise: Promise<MongoClient>
 }
 
 if (process.env.NODE_ENV !== 'production') {
-  if (!global._mongoClientPromise) {
-    global._mongoClientPromise = client.connect();
+  if (!globalM._mongoClientPromise) {
+      globalM._mongoClientPromise = client.connect();
   }
-  clientPromise = global._mongoClientPromise;
-  console.log(client)
+  clientPromise = globalM._mongoClientPromise;
 } else {
   clientPromise = client.connect();
 }

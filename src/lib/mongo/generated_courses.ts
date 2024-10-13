@@ -13,6 +13,7 @@ async function init(): Promise<void> {
         generated_courses = db.collection('generated_courses');
         console.log(client)
     } catch (error) {
+        console.error('Database connection error:', error); // Log the error
         throw new Error('Failed to establish connection to database');
     }
 }
@@ -25,7 +26,7 @@ async function init(): Promise<void> {
 /// GENERATED COURSES ///
 /////////////////////////
 
-export async function getGeneratedCourses(): Promise<{ generated_courses?: any[]; error?: string }> {
+export async function getGeneratedCourses(): Promise<{ generated_courses?: Record<string, unknown>[]; error?: string }> {
     try {
         if (!generated_courses) await init();
         
@@ -36,7 +37,8 @@ export async function getGeneratedCourses(): Promise<{ generated_courses?: any[]
             .toArray();
 
         return { generated_courses: result ?? [] };
-    } catch (error) {
+     } catch (error) {
+        console.error('Error fetching generated courses:', error);
         return { error: 'Failed to fetch generated courses!' };
     }
 }
