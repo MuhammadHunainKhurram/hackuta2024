@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useParams } from "next/navigation";
 import axios from "axios";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -60,12 +60,9 @@ const CoursePage: React.FC = () => {
           fetchYouTubeVideo(data.description);
         }
 
-        // Generate content for each chapter only if not already present
-        data.chapters.forEach((chapter) => {
-          if (!chapterContents[chapter.chapterNumber]) {
-            generateChapterContent(chapter.chapterName, chapter.chapterNumber);
-          }
-        });
+        data.chapters.forEach((chapter) =>
+          generateChapterContent(chapter.chapterName, chapter.chapterNumber, data.description)
+        );
       } catch (error: unknown) {
         console.error("Error fetching course:", error);
         setError(error instanceof Error ? error.message : "Unknown error occurred");
@@ -75,7 +72,7 @@ const CoursePage: React.FC = () => {
     };
 
     fetchCourse();
-  }, [id, chapterContents]); // Include chapterContents as a dependency
+  }, [id]);
 
   const fetchYouTubeVideo = async (query: string) => {
     try {
@@ -101,9 +98,16 @@ const CoursePage: React.FC = () => {
     }
   };
 
-  const generateChapterContent = async (chapterName: string, chapterNumber: number) => {
+  const generateChapterContent = async (
+    chapterName: string,
+    chapterNumber: number,
+    courseDescription: string
+  ) => {
     try {
-      const response = await axios.post("/api/generateChapterContent", { chapterName });
+      const response = await axios.post("/api/generateChapterContent", {
+        chapterName,
+        courseDescription,
+      });
 
       if (response.status === 200) {
         setChapterContents((prev) => ({
@@ -128,7 +132,6 @@ const CoursePage: React.FC = () => {
 
   return (
     <div className="flex min-h-screen bg-gray-50">
-      {/* Sidebar */}
       <aside className="w-1/5 p-4 bg-white shadow-lg">
         <ScrollArea className="h-full">
           <Card className="mb-4">
@@ -144,7 +147,7 @@ const CoursePage: React.FC = () => {
                       className="w-full text-left"
                       onClick={() => handleScrollToChapter(index)}
                     >
-                      Chapter {chapter.chapterNumber}: {chapter.chapterName}
+                      {chapter.chapterName}
                     </Button>
                   </li>
                 ))}
@@ -154,7 +157,6 @@ const CoursePage: React.FC = () => {
         </ScrollArea>
       </aside>
 
-      {/* Main Content */}
       <main className="flex-1 p-8 overflow-y-auto">
         <Card className="mb-6 shadow-md">
           <CardHeader>
@@ -182,19 +184,20 @@ const CoursePage: React.FC = () => {
         <div className="space-y-8">
           {course.chapters.map((chapter, index) => (
             <div
-              key={chapter.chapterNumber}
-              ref={(el) => {
-                chapterRefs.current[index] = el;
-              }}
-              className="mb-8"
-            >
-              <h2 className="text-2xl font-bold text-left mb-2">
-                Chapter {chapter.chapterNumber}: {chapter.chapterName}
-              </h2>
-              <ReactMarkdown className="prose" remarkPlugins={[remarkGfm]}>
-                {chapterContents[chapter.chapterNumber] || "Generating content..."}
-              </ReactMarkdown>
-            </div>
+            key={chapter.chapterNumber}
+            ref={(el) => {
+              if (el) chapterRefs.current[index] = el;
+            }}
+            className="mb-8"
+          >
+            <h2 className="text-2xl font-bold text-left mb-2">
+              {chapter.chapterName}
+            </h2>
+            <ReactMarkdown className="prose" remarkPlugins={[remarkGfm]}>
+              {chapterContents[chapter.chapterNumber] || "Generating content..."}
+            </ReactMarkdown>
+          </div>
+          
           ))}
         </div>
       </main>
