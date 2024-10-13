@@ -130,6 +130,7 @@ const CoursePage: React.FC = () => {
   if (!course) return <p>No course found.</p>;
 
   return (
+<<<<<<< Updated upstream
     <div className="flex min-h-screen bg-gray-50">
       {/* Sidebar */}
       <aside className="w-1/5 p-4 bg-white shadow-lg">
@@ -204,6 +205,68 @@ const CoursePage: React.FC = () => {
           ))}
         </div>
       </main>
+=======
+    <div className="min-h-screen bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700">
+      {/* Main Container */}
+      <div className="flex min-h-screen">
+        {/* Sidebar */}
+        <aside className="w-1/5 p-4 bg-white shadow-lg">
+          <ScrollArea className="h-full">
+            <Card className="mb-4">
+              <CardHeader className="flex justify-center items-center">
+                <CardTitle className="text-xl text-center">Chapters</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ul className="flex flex-col items-center space-y-2">
+                  {course.chapters.map((chapter, index) => (
+                    <li key={chapter.chapterNumber} className="text-left w-full">
+                      <Button
+                        variant="link"
+                        className="w-full text-left"
+                        onClick={() => handleScrollToChapter(index)}
+                      >
+                        Chapter {chapter.chapterNumber}: {chapter.chapterName}
+                      </Button>
+                    </li>
+                  ))}
+                </ul>
+              </CardContent>
+            </Card>
+          </ScrollArea>
+        </aside>
+
+        {/* Main Content */}
+        <main className="flex-1 p-8 overflow-y-auto">
+          <Card className="mb-6 shadow-md">
+            <CardHeader>
+              <CardTitle className="text-3xl font-semibold text-center text-white">
+                {course.description}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <Separator />
+            </CardContent>
+          </Card>
+
+          <div className="space-y-8">
+            {course.chapters.map((chapter, index) => (
+              <div
+                key={chapter.chapterNumber}
+                ref={(el) => {
+                  chapterRefs.current[index] = el;
+                }}
+                className="mb-8"
+              >
+                <h2 className="text-2xl font-bold text-left mb-2 text-white">
+                  Chapter {chapter.chapterNumber}: {chapter.chapterName}
+                </h2>
+                <p className="text-gray-200">{chapter.summary}</p>
+              </div>
+            ))}
+          </div>
+        </main>
+      </div>
+>>>>>>> Stashed changes
     </div>
   );
 };
