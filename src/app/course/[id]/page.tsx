@@ -1,29 +1,37 @@
 'use client';
 
-import { useEffect, useState } from "react";
-import { useParams } from "next/navigation"; // For dynamic routing
+import { useEffect, useState, useRef } from "react";
+import { useParams } from "next/navigation";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
+
+interface Chapter {
+  chapterNumber: number;
+  chapterName: string;
+  summary: string;
+}
 
 interface Course {
   _id: string;
   userId: string;
   description: string;
-  chapters: Array<{
-    chapterNumber: number;
-    chapterName: string;
-    summary: string;
-  }>;
+  chapters: Chapter[];
   includeVideo: boolean;
   includeQuiz: boolean;
   createdAt: string;
 }
 
 const CoursePage: React.FC = () => {
-  const params = useParams(); // Get route params
-  const id = params?.id as string; // Proper casting to ensure access
+  const params = useParams();
+  const id = params?.id as string;
 
   const [course, setCourse] = useState<Course | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+
+  const chapterRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   useEffect(() => {
     const fetchCourse = async () => {
@@ -42,6 +50,7 @@ const CoursePage: React.FC = () => {
 
         const data: Course = await response.json();
         setCourse(data);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         console.error("Error fetching course:", error);
         setError(error.message);
@@ -53,31 +62,73 @@ const CoursePage: React.FC = () => {
     fetchCourse();
   }, [id]);
 
+  const handleScrollToChapter = (index: number) => {
+    chapterRefs.current[index]?.scrollIntoView({ behavior: "smooth" });
+  };
+
   if (loading) return <p>Loading course...</p>;
   if (error) return <p>Error: {error}</p>;
   if (!course) return <p>No course found.</p>;
 
   return (
-    <div className="p-8">
-      <h1 className="text-2xl font-bold mb-4">Course: {course._id}</h1>
-      <p><strong>Description:</strong> {course.description}</p>
-      <p><strong>User ID:</strong> {course.userId}</p>
-      <p><strong>Created At:</strong> {new Date(course.createdAt).toLocaleString()}</p>
+    <div className="flex min-h-screen bg-gray-50">
+      {/* Sidebar */}
+        <aside className="w-1/5 p-4 bg-white shadow-lg">
+            <ScrollArea className="h-full">
+                <Card className="mb-4">
+                <CardHeader className="flex justify-center items-center">
+                    <CardTitle className="text-xl text-center">Chapters</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <ul className="flex flex-col items-center space-y-2">
+                    {course.chapters.map((chapter, index) => (
+                        <li key={chapter.chapterNumber} className="text-left w-full">
+                        <Button
+                            variant="link"
+                            className="w-full text-left"
+                            onClick={() => handleScrollToChapter(index)}
+                        >
+                            Chapter {chapter.chapterNumber}: {chapter.chapterName}
+                        </Button>
+                        </li>
+                    ))}
+                    </ul>
+                </CardContent>
+                </Card>
+            </ScrollArea>
+        </aside>
 
-      <div className="mt-4">
-        <h2 className="text-xl font-semibold">Chapters:</h2>
-        {course.chapters.map((chapter) => (
-          <div key={chapter.chapterNumber} className="mb-4">
-            <h3 className="font-bold">
-              Chapter {chapter.chapterNumber}: {chapter.chapterName}
-            </h3>
-            <p>{chapter.summary}</p>
-          </div>
-        ))}
-      </div>
 
-      <p><strong>Include Video:</strong> {course.includeVideo ? "Yes" : "No"}</p>
-      <p><strong>Include Quiz:</strong> {course.includeQuiz ? "Yes" : "No"}</p>
+      {/* Main Content */}
+      <main className="flex-1 p-8 overflow-y-auto">
+        <Card className="mb-6 shadow-md">
+          <CardHeader>
+            <CardTitle className="text-3xl font-semibold text-center">
+              {course.description}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Separator />
+          </CardContent>
+        </Card>
+
+        <div className="space-y-8">
+          {course.chapters.map((chapter, index) => (
+            <div
+              key={chapter.chapterNumber}
+              ref={(el) => {
+                chapterRefs.current[index] = el;
+              }}
+              className="mb-8"
+            >
+              <h2 className="text-2xl font-bold text-left mb-2">
+                Chapter {chapter.chapterNumber}: {chapter.chapterName}
+              </h2>
+              <p className="text-gray-700">{chapter.summary}</p>
+            </div>
+          ))}
+        </div>
+      </main>
     </div>
   );
 };

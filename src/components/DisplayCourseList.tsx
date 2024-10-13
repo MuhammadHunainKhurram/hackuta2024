@@ -26,6 +26,7 @@ const DisplayCourseList: React.FC = () => {
 
         const data: Course[] = await response.json();
         setCourses(data);
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         console.error("Error fetching courses:", error);
         setError(error.message);

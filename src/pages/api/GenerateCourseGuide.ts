@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { MongoClient, ObjectId } from "mongodb";
+import { MongoClient } from "mongodb";
 import OpenAI from "openai";
 
 const openai = new OpenAI({
@@ -43,7 +43,7 @@ export default async function handler(
   
             For each chapter, include:
             - Chapter Number
-            - Chapter Name
+            - Chapter Name 
             - A Summary of Chapter Content.
             - An Empty JSON String Called Content, that will be filled later`,          },
         ],
