@@ -10,8 +10,8 @@ interface Course {
 
 const DisplayCourseList: React.FC = () => {
   const [courses, setCourses] = useState<Course[]>([]);
-  const [loading, setLoading] = useState(true); // Track loading state
-  const [error, setError] = useState<string | null>(null); // Track errors
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchCourses = async () => {
@@ -24,32 +24,37 @@ const DisplayCourseList: React.FC = () => {
 
         const data: Course[] = await response.json();
         setCourses(data);
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
       } catch (error: any) {
         console.error("Error fetching courses:", error);
         setError(error.message);
       } finally {
-        setLoading(false); // Set loading to false after fetch
+        setLoading(false);
       }
     };
 
     fetchCourses();
   }, []);
 
-  if (loading) return <p>Loading courses...</p>; // Show loading state
-  if (error) return <p>Error: {error}</p>; // Show error if any
+  if (loading) return <p>Loading courses...</p>;
+  if (error) return <p>Error: {error}</p>;
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 p-4">
-      {courses.map((course) => (
-        <div
-          key={course._id}
-          className="border border-gray-300 rounded-lg shadow-md p-4"
-        >
-          <h2 className="font-bold text-xl mb-2">{course.title}</h2>
-          <p className="text-gray-700">{course.description}</p>
+      {courses.length === 0 ? (
+        <div className="justify-center p-2 col-span-full text-center text-white rounded-2xl bg-white bg-opacity-20">
+          <p>Create your first course above!</p>
         </div>
-      ))}
+      ) : (
+        courses.map((course) => (
+          <div
+            key={course._id}
+            className="rounded-lg shadow-md p-4 bg-white bg-opacity-20"
+          >
+            <h2 className="font-bold text-xl mb-2">{course.title}</h2>
+            <p className="text-white">{course.description}</p>
+          </div>
+        ))
+      )}
     </div>
   );
 };

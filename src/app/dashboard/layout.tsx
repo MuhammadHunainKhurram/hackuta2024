@@ -1,6 +1,7 @@
-"use client"
-import React, { ReactNode } from 'react'
-import Header from './_components/Header'
+"use client";
+import React, { ReactNode } from 'react';
+import Header from './_components/Header';
+import Footer from './_components/Footer';
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -8,17 +9,14 @@ interface DashboardLayoutProps {
 
 function DashboardLayout({ children }: DashboardLayoutProps) {
   return (
-    <div>
-        <div>
-          <Header/>
-          <div className='p-10'>
-          {children}
-          </div>
-           
-        </div>
-       
+    <div className="relative min-h-screen flex flex-col">
+      <Header />
+      <div className="flex-grow">{children}
+      </div>
+      
+      <Footer />
     </div>
-  )
+  );
 }
 
-export default DashboardLayout
+export default DashboardLayout;

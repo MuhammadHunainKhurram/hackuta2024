@@ -15,7 +15,7 @@ const Header: React.FC<HeaderProps> = ({ links }) => {
         <div className="flex items-center space-x-4">
           {leftLinks.map((link, index) => (
             <Link key={index} href={link.href}>
-              <button className="bg-blue-600 text-white px-4 py-2 rounded-2xl hover:bg-blue-700 transition-colors">
+              <button className="bg-blue-200 bg-opacity-40 text-white px-4 py-2 rounded-2xl hover:bg-blue-500 transition-colors">
                 {link.label}
               </button>
             </Link>
@@ -25,7 +25,7 @@ const Header: React.FC<HeaderProps> = ({ links }) => {
         <div className="flex items-center space-x-4">
           {rightLinks.map((link, index) => (
             <Link key={index} href={link.href}>
-              <button className="bg-blue-600 text-white px-4 py-2 rounded-2xl hover:bg-blue-700 transition-colors">
+              <button className="bg-blue-200 bg-opacity-40 text-white px-4 py-2 rounded-2xl hover:bg-blue-500 transition-colors">
                 {link.label}
               </button>
             </Link>
