@@ -27,6 +27,7 @@ async function init(): Promise<void> {
     await init();
 })();
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export async function getGeneratedCourses(): Promise<{ generated_courses?: any[]; error?: string }> {
     try {
         if (!generated_courses) await init();

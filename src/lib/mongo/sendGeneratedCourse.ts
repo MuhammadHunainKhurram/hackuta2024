@@ -33,7 +33,10 @@ export async function sendGeneratedCourse(courseData: CourseData) {
       const client = await clientPromise;
       const db: Db = client.db(databaseName);
       const result = await db.collection('generated_courses').insertOne(courseData);
+      console.log(result);
+      console.log(result.insertedId);
       return result.insertedId;
+      
     } catch (error) {
       console.error('Failed to send generated course:', error);
       throw error;

@@ -1,9 +1,7 @@
-import { fetchGeneratedCourses } from '@/lib/mongo/fetchGeneratedCourses'
-import { sendGeneratedCourse } from '@/lib/mongo/sendGeneratedCourse'
 import { CourseData } from '@/lib/mongo/sendGeneratedCourse';
+import { SendingButton } from '@/app/_components/SendingButton';
 
 export default async function Home() {
-  const fetched_courses = await fetchGeneratedCourses()
 
   const exampleCourseData: CourseData = {
     title: "Introduction to TypeScript",
@@ -58,15 +56,9 @@ export default async function Home() {
     ]
   };
 
-  const courseToSend = await sendGeneratedCourse(exampleCourseData)
-
   return (
     <div>
-      <ul>
-        {fetched_courses.map(fetched_course => (
-          <li key={fetched_course._id}>Course Name: {fetched_course.name}</li>
-        ))}
-      </ul>
+      <SendingButton courseData={exampleCourseData}></SendingButton>
     </div>
   )
 }

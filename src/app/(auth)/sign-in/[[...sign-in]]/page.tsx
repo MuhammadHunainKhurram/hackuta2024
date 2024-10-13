@@ -28,7 +28,7 @@ export default function Page() {
         
         <div className="relative z-10 flex flex-col items-center">
           <h1 className="text-6xl mb-6 tracking-wide text-center">
-            <span className={`${poppins.className} font-thin text-gray-300`}>welcome backto </span>
+            <span className={`${poppins.className} font-thin text-gray-300`}>welcome back to </span>
             <span className={`${poppins.className} font-extrabold text-gray-300`}>edu</span>
             <span className={`${poppins.className} font-light text-gray-300`}>Genie</span>
           </h1>

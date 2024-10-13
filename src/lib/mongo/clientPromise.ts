@@ -10,13 +10,15 @@ if (!URI) {
 const client: MongoClient = new MongoClient(URI, options);
 let clientPromise: Promise<MongoClient>;
 
-declare global {
-  var _mongoClientPromise: Promise<MongoClient> | undefined;
+const globalM = global as typeof globalThis & {
+  _mongoClientPromise: Promise<MongoClient>
 }
 
 if (process.env.NODE_ENV !== 'production') {
-  global._mongoClientPromise = client.connect();
-  clientPromise = global._mongoClientPromise;
+  if (!globalM._mongoClientPromise) {
+    globalM._mongoClientPromise = client.connect();
+  }
+  clientPromise = globalM._mongoClientPromise;
 } else {
   clientPromise = client.connect();
 }
