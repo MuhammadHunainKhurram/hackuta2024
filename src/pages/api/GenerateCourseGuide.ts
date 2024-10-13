@@ -22,7 +22,6 @@ export default async function handler(
   try {
     const courseContent = [];
     
-    // Generate content for each chapter individually
     for (let i = 1; i <= chapters; i++) {
       const response = await openai.chat.completions.create({
         model: "gpt-3.5-turbo",

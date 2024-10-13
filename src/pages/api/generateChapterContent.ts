@@ -20,9 +20,9 @@ export default async function handler(
       model: 'gpt-3.5-turbo',
       messages: [
         { role: 'system', content: 'You are a course content generator.' },
-        { role: 'user', content: `Generate content for chapter: ${chapterName}` },
+        { role: 'user', content: `Generate content for chapters: ${chapterName}. Ensure the text uses the maximum character limit and adheres strictly to MARKDOWN format, while imitating textbook paragraphs. Do not include any reference to the chapter number or name. Take your time to carefully consider and craft the content without rushing.` },
       ],
-      max_tokens: 500,
+      max_tokens: 1500,
     });
 
     const message = response?.choices?.[0]?.message?.content?.trim() ?? '';

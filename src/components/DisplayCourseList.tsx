@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from "react";
+import Link from "next/link"; // Import Link from next/link
 
 interface Course {
   _id: string;
@@ -26,10 +27,13 @@ const DisplayCourseList: React.FC = () => {
 
         const data: Course[] = await response.json();
         setCourses(data);
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      } catch (error: any) {
+      } catch (error: unknown) {
         console.error("Error fetching courses:", error);
-        setError(error.message);
+        if (error instanceof Error) {
+          setError(error.message); // Now it's safe to access 'message'
+        } else {
+          setError("An unknown error occurred");
+        }
       } finally {
         setLoading(false);
       }
@@ -49,13 +53,12 @@ const DisplayCourseList: React.FC = () => {
         </div>
       ) : (
         courses.map((course) => (
-          <div
-            key={course._id}
-            className="rounded-lg shadow-md p-4 bg-white bg-opacity-20"
-          >
-            <h2 className="font-bold text-xl mb-2">{course.title}</h2>
-            <p className="text-white">{course.description}</p>
-          </div>
+          <Link href={`/course/${course._id}`} key={course._id}>
+            <div className="rounded-lg shadow-md p-4 bg-white bg-opacity-20 cursor-pointer hover:bg-opacity-30 transition">
+              <h2 className="font-bold text-xl mb-2">{course.title}</h2>
+              <p className="text-white">{course.description}</p>
+            </div>
+          </Link>
         ))
       )}
     </div>
