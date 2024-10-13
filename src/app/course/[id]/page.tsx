@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm"; // For GitHub flavored markdown (supports tables, lists, etc.)
+import remarkGfm from "remark-gfm";
 
 interface Chapter {
   chapterNumber: number;
@@ -38,7 +38,6 @@ const CoursePage: React.FC = () => {
   const chapterRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [videoId, setVideoId] = useState<string | null>(null);
 
-
   useEffect(() => {
     const fetchCourse = async () => {
       if (!id) {
@@ -61,24 +60,22 @@ const CoursePage: React.FC = () => {
           fetchYouTubeVideo(data.description);
         }
 
-        // Generate content for each chapter
-        data.chapters.forEach((chapter) =>
-          generateChapterContent(chapter.chapterName, chapter.chapterNumber)
-        );
+        // Generate content for each chapter only if not already present
+        data.chapters.forEach((chapter) => {
+          if (!chapterContents[chapter.chapterNumber]) {
+            generateChapterContent(chapter.chapterName, chapter.chapterNumber);
+          }
+        });
       } catch (error: unknown) {
         console.error("Error fetching course:", error);
-        if (error instanceof Error) {
-          setError(error.message); // Now it's safe to access 'message'
-        } else {
-          setError("An unknown error occurred");
-        }
+        setError(error instanceof Error ? error.message : "Unknown error occurred");
       } finally {
         setLoading(false);
       }
     };
 
     fetchCourse();
-  }, [id]);
+  }, [id, chapterContents]); // Include chapterContents as a dependency
 
   const fetchYouTubeVideo = async (query: string) => {
     try {
@@ -194,10 +191,7 @@ const CoursePage: React.FC = () => {
               <h2 className="text-2xl font-bold text-left mb-2">
                 Chapter {chapter.chapterNumber}: {chapter.chapterName}
               </h2>
-              <ReactMarkdown
-                className="prose"
-                remarkPlugins={[remarkGfm]}
-              >
+              <ReactMarkdown className="prose" remarkPlugins={[remarkGfm]}>
                 {chapterContents[chapter.chapterNumber] || "Generating content..."}
               </ReactMarkdown>
             </div>
