@@ -21,6 +21,7 @@ sections: Section[];
 }
 
 export interface CourseData {
+userID: string;
 title: string;
 description: string;
 duration: number;

@@ -1,9 +1,9 @@
 import { CourseData } from '@/lib/mongo/sendGeneratedCourse';
-import { SendingButton } from '@/app/_components/SendingButton';
 
 export default async function Home() {
 
   const exampleCourseData: CourseData = {
+    userID: "8328",
     title: "Introduction to TypeScript",
     description: "A beginner-friendly course that introduces TypeScript and its core features.",
     duration: 10, // in hours
@@ -58,7 +58,7 @@ export default async function Home() {
 
   return (
     <div>
-      <SendingButton courseData={exampleCourseData}></SendingButton>
+      {/* <HandleCourseSend courseData={exampleCourseData}/> */}
     </div>
   )
 }

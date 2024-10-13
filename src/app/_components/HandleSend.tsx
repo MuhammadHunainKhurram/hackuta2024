@@ -1,12 +1,16 @@
 'use client';
-import { useState } from 'react';
 import { CourseData } from '@/lib/mongo/sendGeneratedCourse';
+import { UserData } from '@/lib/mongo/sendUser';
 
 interface SendCourseProps {
   courseData: CourseData;
 }
 
-export const HandleSend = async ({ courseData }: SendCourseProps) => {
+interface SendUserProps {
+    userData: UserData;
+  }
+
+export const HandleCourseSend = async ({ courseData }: SendCourseProps) => {
   try {
     const response = await fetch('/api/SendCourse', {
       method: 'POST',
@@ -28,3 +32,27 @@ export const HandleSend = async ({ courseData }: SendCourseProps) => {
     throw error;
   }
 };
+
+
+export const HandleUserSend = async ({ userData }: SendUserProps) => {
+    try {
+      const response = await fetch('/api/SendUser', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(userData),
+      });
+      
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+  
+      const userToSend = await response.json();
+      console.log(userToSend);
+      return userToSend;
+    } catch (error) {
+      console.error('Failed to send course data:', error);
+      throw error;
+    }
+  };
