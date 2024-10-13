@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm"; // For GitHub flavored markdown (supports tables, lists, etc.)
+import remarkGfm from "remark-gfm";
 
 interface Chapter {
   chapterNumber: number;
@@ -61,14 +61,13 @@ const CoursePage: React.FC = () => {
           fetchYouTubeVideo(data.description);
         }
 
-        // Generate content for each chapter
         data.chapters.forEach((chapter) =>
           generateChapterContent(chapter.chapterName, chapter.chapterNumber)
         );
       } catch (error: unknown) {
         console.error("Error fetching course:", error);
         if (error instanceof Error) {
-          setError(error.message); // Now it's safe to access 'message'
+          setError(error.message); 
         } else {
           setError("An unknown error occurred");
         }
